@@ -1,0 +1,187 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="BuyShipMaster.master.cs" Inherits="NHST.BuyShipMaster" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="shortcut icon" href="" type="image/x-icon" />
+    <link rel="stylesheet" href="/App_Themes/CSSBUYSHIP/js/WOW-master/animate.css" />
+    <link rel="stylesheet" href="/App_Themes/CSSBUYSHIP/js/Magnific-Popup-master/magnific-popup.css" />
+    <link rel="stylesheet" href="/App_Themes/CSSBUYSHIP/js/Font-awesome-4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/App_Themes/CSSBUYSHIP/js/ms-Dropdown-master/css/msdropdown/dd.css">
+    <link rel="stylesheet" href="/App_Themes/CSSBUYSHIP/css/style.css" />
+    <script src="/App_Themes/CSSBUYSHIP/js/jquery-3.4.1.min.js"></script>
+    <title>Buyship - Nhập hàng Nhật</title>
+    <asp:Literal ID="ltrSEO" runat="server"></asp:Literal>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <header>
+            <div class="header">
+                <div class="header-top">
+                    <div class="container isner">
+                        <div class="header-top-left">
+                            <asp:Literal runat="server" ID="ltrCurrency"></asp:Literal>
+                            <asp:Literal runat="server" ID="ltrEmail"></asp:Literal>
+                        </div>
+                        <div class="header-top-right">
+                            <asp:Literal runat="server" ID="ltrSocial"></asp:Literal>
+                            <div class="user-box">
+                                <asp:Literal runat="server" ID="ltrLogin"></asp:Literal>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-bottom">
+                    <div class="container isner">
+                        <div class="main-logo">
+                            <asp:Literal runat="server" ID="ltrLogo"></asp:Literal>
+                        </div>
+                        <div class="main-menu">
+                            <asp:Literal runat="server" ID="ltrMenu"></asp:Literal>
+                            <div class="main-menu-overlay"></div>
+                        </div>
+                        <div class="hamburger-btn main-menu-btn">
+                            <div class="bar"></div>
+                        </div>
+                        <div class="hotline">
+                            <asp:Literal runat="server" ID="ltrHotline"></asp:Literal>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+        </asp:ContentPlaceHolder>
+
+        <footer class="footer">
+            <div class="table-footer">
+                <div class="container">
+                    <div class="columns">
+                        <div class="colum">
+                            <div class="content-ft">
+                                <div class="logo-ft">
+                                    <a href="#">
+                                        <img src="/App_Themes/CSSBUYSHIP/images/logo.png" alt="">
+                                    </a>
+                                </div>
+                                <p class="desc">
+                                    Chúng tôi chuyên nhận order và vận chuyển hộ hàng hóa từ Nhật Bản về Việt Nam, với chi phí ưu đãi thấp nhất có thể. Hàng về nhanh chóng đúng thời gian cam kết.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="colum">
+                            <div class="content-ft">
+                                <h5 class="title">Liên hệ
+                                </h5>
+                                <ul class="list-ft">
+                                    <li>
+                                        <asp:Literal runat="server" ID="ltrDiachi"></asp:Literal>
+                                    </li>
+                                    <li>
+                                        <asp:Literal runat="server" ID="ltrEmailFT"></asp:Literal>
+                                    </li>
+                                    <li>
+                                        <asp:Literal runat="server" ID="ltrHotlineFT"></asp:Literal>
+                                    </li>
+                                    <li>
+                                        <a href="/"><span class="font-bold-1">Website: </span>BUYSHIP.VN</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="colum">
+                            <div class="content-ft padd-l-50">
+                                <h5 class="title">Menu
+                                </h5>
+                                <ul class="list-ft">
+                                    <li>
+                                        <a href="/" class="hover-li">Trang chủ</a>
+                                    </li>
+                                    <li>
+                                        <a href="/chuyen-muc/gioi-thieu" class="hover-li">Giới thiệu</a>
+                                    </li>
+                                    <li>
+                                        <a href="/chuyen-muc/bang-gia" class="hover-li">Bảng giá</a>
+                                    </li>
+                                    <li>
+                                        <a href="/chuyen-muc/huong-dan" class="hover-li">Hướng dẫn</a>
+                                    </li>
+                                    <li>
+                                        <a href="/chuyen-muc/chinh-sach" class="hover-li">Chính sách</a>
+                                    </li>
+                                    <li>
+                                        <a href="/chuyen-muc/tin-tuc" class="hover-li">Tin tức</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="colum">
+                            <div class="content-ft">
+                                <h5 class="title">Mạng xã hội
+                                </h5>
+                                <asp:Literal runat="server" ID="ltrSocialFT"></asp:Literal>
+                                <div class="box-fanpage">
+                                    <div class="box-img">
+                                        <img src="/App_Themes/CSSBUYSHIP/images/fanpage.png" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="copy-right">
+                © Copyright BuyShip
+            </div>
+        </footer>
+
+        <ul class="fixed-nav float-right" style="position: fixed; top: 40%; right: -40px; transform: translateX(-50%);">
+            <li style="margin: 20px;">
+                <div style="background-color: rgba(255,255,255,0.7); display: flex; justify-content: center; align-items: center; width: 50px; border-radius: 25px; height: 50px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)">
+                    <asp:Literal runat="server" ID="ltrZalo1"></asp:Literal>
+                </div>
+            </li>
+            <li style="margin: 20px">
+                <div style="background-color: rgba(255,255,255,0.7); display: flex; justify-content: center; align-items: center; width: 50px; border-radius: 25px; height: 50px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)">
+                    <asp:Literal runat="server" ID="ltrZalo2"></asp:Literal>
+                </div>
+            </li>
+            <li style="margin: 20px">
+                <div style="background-color: rgba(255,255,255,0.7); display: flex; justify-content: center; align-items: center; width: 50px; border-radius: 25px; height: 50px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)">
+                    <asp:Literal runat="server" ID="ltrZalo3"></asp:Literal>
+                </div>
+            </li>
+            <li style="margin: 20px">
+                <div style="background-color: rgba(255,255,255,0.7); display: flex; justify-content: center; align-items: center; width: 50px; border-radius: 25px; height: 50px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)">
+                    <a href ="https://goo.gl/maps/RFLF1xty1Woh9QGf8" target="_blank" style="display:flex;"><img src="/App_Themes/CSSBUYSHIP/images/location.png" alt="\" style="width:35px;"></a>
+                </div>
+            </li>
+        </ul>
+
+        <div class="m-backtotop" aria-hidden="true">
+            <div class="arrow">
+                <i class="fa fa-caret-up" aria-hidden="true"></i>
+            </div>
+            <div class="text">
+                Back to top
+            </div>
+        </div>
+
+        <script src="/App_Themes/CSSBUYSHIP/js/WOW-master/wow.min.js"></script>
+        <script src="/App_Themes/CSSBUYSHIP/js/Magnific-Popup-master/jquery.magnific-popup.min.js"></script>
+        <script src="/App_Themes/CSSBUYSHIP/js/ms-Dropdown-master/js/msdropdown/jquery.dd.min.js"></script>
+        <script src="/App_Themes/CSSBUYSHIP/js/main.js"></script>
+        <script>
+            new WOW().init();
+            $("#brand-source").msDropdown();
+        </script>
+    </form>
+</body>
+</html>
