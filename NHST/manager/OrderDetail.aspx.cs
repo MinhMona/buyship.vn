@@ -1242,7 +1242,44 @@ namespace NHST.manager
 
                         txtCurrency.Text = Convert.ToDouble(o.CurrentCNYVN).ToString();
 
-                        double tot = Math.Round(Convert.ToDouble(o.PriceVND), 0) + fscn - realprice - fscnreal;
+                        //Tính hoa hồng = (Tiền hàng trên web + Tiền ship) * (% phí mua hàng)
+                        double income = 0;
+                        double priceInWeb = 0;
+                        double servicefee = 0;
+
+                        if (!string.IsNullOrEmpty(o.PriceVND))
+                            priceInWeb = Convert.ToDouble(o.PriceVND);
+                        double feeShipJP = 0;
+                        if (!string.IsNullOrEmpty(o.FeeShipCN))
+                            feeShipJP = Convert.ToDouble(o.FeeShipCN);
+
+                        var adminfeebuypro = FeeBuyProController.GetAll();
+                        if (adminfeebuypro.Count > 0)
+                        {
+                            foreach (var item in adminfeebuypro)
+                            {
+                                if (priceInWeb >= item.AmountFrom && priceInWeb < item.AmountTo)
+                                {
+                                    double feepercent = 0;
+                                    if (item.FeePercent.ToString().ToFloat(0) > 0)
+                                        feepercent = Convert.ToDouble(item.FeePercent);
+                                    servicefee = feepercent / 100;
+                                    break;
+                                }
+                            }
+                        }
+                        var userMainOrder = AccountController.GetByID(o.UID ?? 0);
+                        if (!string.IsNullOrEmpty(userMainOrder.FeeBuyPro))
+                        {
+                            if (userMainOrder.FeeBuyPro.ToFloat(0) > 0)
+                            {
+                                servicefee = (userMainOrder.FeeBuyPro.ToFloat(0) / 100);
+                            }
+                        }
+
+                        income = Math.Round((priceInWeb + feeShipJP) * servicefee, 0);
+
+                        double tot = income;
                         double totCYN = tot / currency1;
                         pHHCYN.Text = Math.Round(Convert.ToDouble(totCYN), 2).ToString();
                         pHHVND.Text = string.Format("{0:N0}", Convert.ToDouble(tot));
@@ -3560,6 +3597,42 @@ namespace NHST.manager
                                 #region Saler
                                 if (SalerID > 0)
                                 {
+                                    //Tính hoa hồng = (Tiền hàng trên web + Tiền ship) * (% phí mua hàng)
+                                    double income = 0;
+                                    double priceInWeb = 0;
+                                    double servicefee = 0;
+
+                                    if (!string.IsNullOrEmpty(mo.PriceVND))
+                                        priceInWeb = Convert.ToDouble(mo.PriceVND);
+                                    double feeShipJP = 0;
+                                    if (!string.IsNullOrEmpty(mo.FeeShipCN))
+                                        feeShipJP = Convert.ToDouble(mo.FeeShipCN);
+
+                                    var adminfeebuypro = FeeBuyProController.GetAll();
+                                    if (adminfeebuypro.Count > 0)
+                                    {
+                                        foreach (var item in adminfeebuypro)
+                                        {
+                                            if (priceInWeb >= item.AmountFrom && priceInWeb < item.AmountTo)
+                                            {
+                                                double feepercent = 0;
+                                                if (item.FeePercent.ToString().ToFloat(0) > 0)
+                                                    feepercent = Convert.ToDouble(item.FeePercent);
+                                                servicefee = feepercent / 100;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    var userMainOrder = AccountController.GetByID(mo.UID ?? 0);
+                                    if (!string.IsNullOrEmpty(userMainOrder.FeeBuyPro))
+                                    {
+                                        if (userMainOrder.FeeBuyPro.ToFloat(0) > 0)
+                                        {
+                                            servicefee = (userMainOrder.FeeBuyPro.ToFloat(0) / 100);
+                                        }
+                                    }
+
+                                    income = Math.Round((priceInWeb + feeShipJP) * servicefee, 0);
                                     if (SalerID == salerID_old)
                                     {
                                         var staff = StaffIncomeController.GetByMainOrderIDUID(id, salerID_old);
@@ -3578,14 +3651,16 @@ namespace NHST.manager
                                                     if (d > 30)
                                                     {
                                                         salepercentaf3m = Convert.ToDouble(staff.PercentReceive);
-                                                        double per = Math.Round(feebp * salepercentaf3m / 100, 0);
+                                                        double per = Math.Round(income * salepercentaf3m / 100, 0);
+                                                        //double per = Math.Round(feebp * salepercentaf3m / 100, 0);
                                                         StaffIncomeController.Update(rStaffID, mo.TotalPriceVND, salepercentaf3m.ToString(), 1,
                                                             per.ToString(), false, currentDate, username);
                                                     }
                                                     else
                                                     {
                                                         salepercent = Convert.ToDouble(staff.PercentReceive);
-                                                        double per = Math.Round(feebp * salepercent / 100, 0);
+                                                        double per = Math.Round(income * salepercent / 100, 0);
+                                                        //double per = Math.Round(feebp * salepercent / 100, 0);
                                                         StaffIncomeController.Update(rStaffID, mo.TotalPriceVND, salepercent.ToString(), 1,
                                                             per.ToString(), false, currentDate, username);
                                                     }
@@ -3602,13 +3677,15 @@ namespace NHST.manager
                                                 int d = CreatedDate.Subtract(createdDate).Days;
                                                 if (d > 30)
                                                 {
-                                                    double per = Math.Round(feebp * salepercentaf3m / 100, 0);
+                                                    double per = Math.Round(income * salepercentaf3m / 100, 0);
+                                                    //double per = Math.Round(feebp * salepercentaf3m / 100, 0);
                                                     StaffIncomeController.Insert(mo.ID, per.ToString(), salepercentaf3m.ToString(), salerID_old, salerName, 6, 1, per.ToString(), false,
                                                     CreatedDate, currentDate, username);
                                                 }
                                                 else
                                                 {
-                                                    double per = Math.Round(feebp * salepercent / 100, 0);
+                                                    double per = Math.Round(income * salepercent / 100, 0);
+                                                    //double per = Math.Round(feebp * salepercent / 100, 0);
                                                     StaffIncomeController.Insert(mo.ID, per.ToString(), salepercent.ToString(), salerID_old, salerName, 6, 1, per.ToString(), false,
                                                     CreatedDate, currentDate, username);
                                                 }
@@ -3630,13 +3707,15 @@ namespace NHST.manager
                                             int d = CreatedDate.Subtract(createdDate).Days;
                                             if (d > 30)
                                             {
-                                                double per = Math.Round(feebp * salepercentaf3m / 100, 0);
+                                                double per = Math.Round(income * salepercentaf3m / 100, 0);
+                                                //double per = Math.Round(feebp * salepercentaf3m / 100, 0);
                                                 StaffIncomeController.Insert(id, per.ToString(), salepercentaf3m.ToString(), SalerID, salerName, 6, 1, per.ToString(), false,
                                                 CreatedDate, currentDate, username);
                                             }
                                             else
                                             {
-                                                double per = Math.Round(feebp * salepercent / 100, 0);
+                                                double per = Math.Round(income * salepercent / 100, 0);
+                                                //double per = Math.Round(feebp * salepercent / 100, 0);
                                                 StaffIncomeController.Insert(id, per.ToString(), salepercent.ToString(), SalerID, salerName, 6, 1, per.ToString(), false,
                                                 CreatedDate, currentDate, username);
                                             }
@@ -3645,96 +3724,96 @@ namespace NHST.manager
                                 }
                                 #endregion
                                 #region Đặt hàng
-                                if (DathangID > 0)
-                                {
-                                    if (DathangID == dathangID_old)
-                                    {
-                                        var staff = StaffIncomeController.GetByMainOrderIDUID(id, dathangID_old);
-                                        if (staff != null)
-                                        {
-                                            if (staff.Status == 1)
-                                            {
-                                                //double totalPrice = Convert.ToDouble(mo.TotalPriceVND);
-                                                double totalPrice = Convert.ToDouble(mo.PriceVND) + Convert.ToDouble(mo.FeeShipCN);
-                                                totalPrice = Math.Round(totalPrice, 0);
-                                                double totalRealPrice = 0;
-                                                if (mo.TotalPriceReal.ToFloat(0) > 0)
-                                                    totalRealPrice = Math.Round(Convert.ToDouble(mo.TotalPriceReal), 0);
-                                                if (totalRealPrice > 0)
-                                                {
-                                                    double totalpriceloi = totalPrice - totalRealPrice;
-                                                    dathangpercent = Convert.ToDouble(staff.PercentReceive);
-                                                    double income = Math.Round(totalpriceloi * dathangpercent / 100, 0);
-                                                    //double income = totalpriceloi;
-                                                    StaffIncomeController.Update(staff.ID, totalRealPrice.ToString(), dathangpercent.ToString(), 1,
-                                                                income.ToString(), false, currentDate, username);
-                                                }
+                                //if (DathangID > 0)
+                                //{
+                                //    if (DathangID == dathangID_old)
+                                //    {
+                                //        var staff = StaffIncomeController.GetByMainOrderIDUID(id, dathangID_old);
+                                //        if (staff != null)
+                                //        {
+                                //            if (staff.Status == 1)
+                                //            {
+                                //                //double totalPrice = Convert.ToDouble(mo.TotalPriceVND);
+                                //                double totalPrice = Convert.ToDouble(mo.PriceVND) + Convert.ToDouble(mo.FeeShipCN);
+                                //                totalPrice = Math.Round(totalPrice, 0);
+                                //                double totalRealPrice = 0;
+                                //                if (mo.TotalPriceReal.ToFloat(0) > 0)
+                                //                    totalRealPrice = Math.Round(Convert.ToDouble(mo.TotalPriceReal), 0);
+                                //                if (totalRealPrice > 0)
+                                //                {
+                                //                    double totalpriceloi = totalPrice - totalRealPrice;
+                                //                    dathangpercent = Convert.ToDouble(staff.PercentReceive);
+                                //                    double income = Math.Round(totalpriceloi * dathangpercent / 100, 0);
+                                //                    //double income = totalpriceloi;
+                                //                    StaffIncomeController.Update(staff.ID, totalRealPrice.ToString(), dathangpercent.ToString(), 1,
+                                //                                income.ToString(), false, currentDate, username);
+                                //                }
 
-                                            }
-                                        }
-                                        else
-                                        {
-                                            var dathang = AccountController.GetByID(dathangID_old);
-                                            if (dathang != null)
-                                            {
-                                                dathangName = dathang.Username;
-                                                //double totalPrice = Convert.ToDouble(mo.TotalPriceVND);
-                                                double totalPrice = Convert.ToDouble(mo.PriceVND) + Convert.ToDouble(mo.FeeShipCN);
-                                                totalPrice = Math.Round(totalPrice, 0);
-                                                double totalRealPrice = 0;
-                                                if (!string.IsNullOrEmpty(mo.TotalPriceReal))
-                                                    totalRealPrice = Math.Round(Convert.ToDouble(mo.TotalPriceReal), 0);
-                                                if (totalRealPrice > 0)
-                                                {
-                                                    double totalpriceloi = totalPrice - totalRealPrice;
-                                                    totalpriceloi = Math.Round(totalpriceloi, 0);
-                                                    double income = Math.Round(totalpriceloi * dathangpercent / 100, 0);
-                                                    //double income = totalpriceloi;
-                                                    StaffIncomeController.Insert(mo.ID, totalpriceloi.ToString(), dathangpercent.ToString(), dathangID_old, dathangName, 3, 1,
-                                                        income.ToString(), false, CreatedDate, currentDate, username);
-                                                }
-                                                else
-                                                {
-                                                    StaffIncomeController.Insert(mo.ID, "0", dathangpercent.ToString(), dathangID_old, dathangName, 3, 1, "0", false,
-                                                    CreatedDate, currentDate, username);
-                                                }
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        var staff = StaffIncomeController.GetByMainOrderIDUID(id, dathangID_old);
-                                        if (staff != null)
-                                        {
-                                            StaffIncomeController.Delete(staff.ID);
-                                        }
-                                        var dathang = AccountController.GetByID(DathangID);
-                                        if (dathang != null)
-                                        {
-                                            dathangName = dathang.Username;
-                                            //double totalPrice = Convert.ToDouble(mo.TotalPriceVND);
-                                            double totalPrice = Convert.ToDouble(mo.PriceVND) + Convert.ToDouble(mo.FeeShipCN);
-                                            totalPrice = Math.Round(totalPrice, 0);
-                                            double totalRealPrice = 0;
-                                            if (mo.TotalPriceReal.ToFloat(0) > 0)
-                                                totalRealPrice = Math.Round(Convert.ToDouble(mo.TotalPriceReal), 0);
-                                            if (totalRealPrice > 0)
-                                            {
-                                                double totalpriceloi = totalPrice - totalRealPrice;
-                                                double income = Math.Round(totalpriceloi * dathangpercent / 100, 0);
-                                                //double income = totalpriceloi;
+                                //            }
+                                //        }
+                                //        else
+                                //        {
+                                //            var dathang = AccountController.GetByID(dathangID_old);
+                                //            if (dathang != null)
+                                //            {
+                                //                dathangName = dathang.Username;
+                                //                //double totalPrice = Convert.ToDouble(mo.TotalPriceVND);
+                                //                double totalPrice = Convert.ToDouble(mo.PriceVND) + Convert.ToDouble(mo.FeeShipCN);
+                                //                totalPrice = Math.Round(totalPrice, 0);
+                                //                double totalRealPrice = 0;
+                                //                if (!string.IsNullOrEmpty(mo.TotalPriceReal))
+                                //                    totalRealPrice = Math.Round(Convert.ToDouble(mo.TotalPriceReal), 0);
+                                //                if (totalRealPrice > 0)
+                                //                {
+                                //                    double totalpriceloi = totalPrice - totalRealPrice;
+                                //                    totalpriceloi = Math.Round(totalpriceloi, 0);
+                                //                    double income = Math.Round(totalpriceloi * dathangpercent / 100, 0);
+                                //                    //double income = totalpriceloi;
+                                //                    StaffIncomeController.Insert(mo.ID, totalpriceloi.ToString(), dathangpercent.ToString(), dathangID_old, dathangName, 3, 1,
+                                //                        income.ToString(), false, CreatedDate, currentDate, username);
+                                //                }
+                                //                else
+                                //                {
+                                //                    StaffIncomeController.Insert(mo.ID, "0", dathangpercent.ToString(), dathangID_old, dathangName, 3, 1, "0", false,
+                                //                    CreatedDate, currentDate, username);
+                                //                }
+                                //            }
+                                //        }
+                                //    }
+                                //    else
+                                //    {
+                                //        var staff = StaffIncomeController.GetByMainOrderIDUID(id, dathangID_old);
+                                //        if (staff != null)
+                                //        {
+                                //            StaffIncomeController.Delete(staff.ID);
+                                //        }
+                                //        var dathang = AccountController.GetByID(DathangID);
+                                //        if (dathang != null)
+                                //        {
+                                //            dathangName = dathang.Username;
+                                //            //double totalPrice = Convert.ToDouble(mo.TotalPriceVND);
+                                //            double totalPrice = Convert.ToDouble(mo.PriceVND) + Convert.ToDouble(mo.FeeShipCN);
+                                //            totalPrice = Math.Round(totalPrice, 0);
+                                //            double totalRealPrice = 0;
+                                //            if (mo.TotalPriceReal.ToFloat(0) > 0)
+                                //                totalRealPrice = Math.Round(Convert.ToDouble(mo.TotalPriceReal), 0);
+                                //            if (totalRealPrice > 0)
+                                //            {
+                                //                double totalpriceloi = totalPrice - totalRealPrice;
+                                //                double income = Math.Round(totalpriceloi * dathangpercent / 100, 0);
+                                //                //double income = totalpriceloi;
 
-                                                StaffIncomeController.Insert(id, totalpriceloi.ToString(), dathangpercent.ToString(), DathangID, dathangName, 3, 1,
-                                                    income.ToString(), false, CreatedDate, currentDate, username);
-                                            }
-                                            else
-                                            {
-                                                StaffIncomeController.Insert(id, "0", dathangpercent.ToString(), DathangID, dathangName, 3, 1, "0", false,
-                                                CreatedDate, currentDate, username);
-                                            }
-                                        }
-                                    }
-                                }
+                                //                StaffIncomeController.Insert(id, totalpriceloi.ToString(), dathangpercent.ToString(), DathangID, dathangName, 3, 1,
+                                //                    income.ToString(), false, CreatedDate, currentDate, username);
+                                //            }
+                                //            else
+                                //            {
+                                //                StaffIncomeController.Insert(id, "0", dathangpercent.ToString(), DathangID, dathangName, 3, 1, "0", false,
+                                //                CreatedDate, currentDate, username);
+                                //            }
+                                //        }
+                                //    }
+                                //}
                                 #endregion
                             }
 
@@ -3802,6 +3881,43 @@ namespace NHST.manager
                 #region Saler
                 if (SalerID > 0)
                 {
+                    //Tính hoa hồng = (Tiền hàng trên web + Tiền ship) * (% phí mua hàng)
+                    double income = 0;
+                    double priceInWeb = 0;
+                    double servicefee = 0;
+
+                    if (!string.IsNullOrEmpty(mo.PriceVND))
+                        priceInWeb = Convert.ToDouble(mo.PriceVND);
+                    double feeShipJP = 0;
+                    if (!string.IsNullOrEmpty(mo.FeeShipCN))
+                        feeShipJP = Convert.ToDouble(mo.FeeShipCN);
+
+                    var adminfeebuypro = FeeBuyProController.GetAll();
+                    if (adminfeebuypro.Count > 0)
+                    {
+                        foreach (var item in adminfeebuypro)
+                        {
+                            if (priceInWeb >= item.AmountFrom && priceInWeb < item.AmountTo)
+                            {
+                                double feepercent = 0;
+                                if (item.FeePercent.ToString().ToFloat(0) > 0)
+                                    feepercent = Convert.ToDouble(item.FeePercent);
+                                servicefee = feepercent / 100;
+                                break;
+                            }
+                        }
+                    }
+                    var userMainOrder = AccountController.GetByID(mo.UID ?? 0);
+                    if (!string.IsNullOrEmpty(userMainOrder.FeeBuyPro))
+                    {
+                        if (userMainOrder.FeeBuyPro.ToFloat(0) > 0)
+                        {
+                            servicefee = (userMainOrder.FeeBuyPro.ToFloat(0) / 100);
+                        }
+                    }
+
+                    income = Math.Round((priceInWeb + feeShipJP) * servicefee , 0);
+
                     if (SalerID == salerID_old)
                     {
                         var staff = StaffIncomeController.GetByMainOrderIDUID(ID, salerID_old);
@@ -3820,14 +3936,16 @@ namespace NHST.manager
                                     if (d > 30)
                                     {
                                         salepercentaf3m = Convert.ToDouble(staff.PercentReceive);
-                                        double per = Math.Round(feebp * salepercentaf3m / 100, 0);
+                                        double per = Math.Round(income * salepercentaf3m / 100, 0);
+                                        //double per = Math.Round(feebp * salepercentaf3m / 100, 0);
                                         StaffIncomeController.Update(rStaffID, mo.TotalPriceVND, salepercentaf3m.ToString(), 1,
                                             per.ToString(), false, currentDate, username);
                                     }
                                     else
                                     {
                                         salepercent = Convert.ToDouble(staff.PercentReceive);
-                                        double per = Math.Round(feebp * salepercent / 100, 0);
+                                        double per = Math.Round(income * salepercent / 100, 0);
+                                        //double per = Math.Round(feebp * salepercent / 100, 0);
                                         StaffIncomeController.Update(rStaffID, mo.TotalPriceVND, salepercent.ToString(), 1,
                                             per.ToString(), false, currentDate, username);
                                     }
@@ -3844,13 +3962,15 @@ namespace NHST.manager
                                 int d = CreatedDate.Subtract(createdDate).Days;
                                 if (d > 30)
                                 {
-                                    double per = Math.Round(feebp * salepercentaf3m / 100, 0);
+                                    double per = Math.Round(income * salepercentaf3m / 100, 0);
+                                    //double per = Math.Round(feebp * salepercentaf3m / 100, 0);
                                     StaffIncomeController.Insert(ID, per.ToString(), salepercentaf3m.ToString(), SalerID, salerName, 6, 1, per.ToString(), false,
                                     CreatedDate, currentDate, username);
                                 }
                                 else
                                 {
-                                    double per = Math.Round(feebp * salepercent / 100, 0);
+                                    double per = Math.Round(income * salepercent / 100, 0);
+                                    //double per = Math.Round(feebp * salepercent / 100, 0);
                                     StaffIncomeController.Insert(ID, per.ToString(), salepercent.ToString(), SalerID, salerName, 6, 1, per.ToString(), false,
                                     CreatedDate, currentDate, username);
                                 }
@@ -3872,13 +3992,15 @@ namespace NHST.manager
                             int d = CreatedDate.Subtract(createdDate).Days;
                             if (d > 30)
                             {
-                                double per = Math.Round(feebp * salepercentaf3m / 100, 0);
+                                double per = Math.Round(income * salepercentaf3m / 100, 0);
+                                //double per = Math.Round(feebp * salepercentaf3m / 100, 0);
                                 StaffIncomeController.Insert(ID, per.ToString(), salepercentaf3m.ToString(), SalerID, salerName, 6, 1, per.ToString(), false,
                                 CreatedDate, currentDate, username);
                             }
                             else
                             {
-                                double per = Math.Round(feebp * salepercent / 100, 0);
+                                double per = Math.Round(income * salepercent / 100, 0);
+                                //double per = Math.Round(feebp * salepercent / 100, 0);
                                 StaffIncomeController.Insert(ID, per.ToString(), salepercent.ToString(), SalerID, salerName, 6, 1, per.ToString(), false,
                                 CreatedDate, currentDate, username);
                             }
@@ -3887,97 +4009,97 @@ namespace NHST.manager
                 }
                 #endregion
                 #region Đặt hàng
-                if (DathangID > 0)
-                {
-                    if (DathangID == dathangID_old)
-                    {
-                        var staff = StaffIncomeController.GetByMainOrderIDUID(ID, dathangID_old);
-                        if (staff != null)
-                        {
-                            if (staff.Status == 1)
-                            {
-                                //double totalPrice = Convert.ToDouble(mo.TotalPriceVND);
-                                double totalPrice = Convert.ToDouble(mo.PriceVND) + Convert.ToDouble(mo.FeeShipCN);
-                                totalPrice = Math.Round(totalPrice, 0);
-                                double totalRealPrice = 0;
-                                if (!string.IsNullOrEmpty(mo.TotalPriceReal))
-                                    totalRealPrice = Math.Round(Convert.ToDouble(mo.TotalPriceReal), 0);
-                                if (totalRealPrice > 0)
-                                {
-                                    double totalpriceloi = totalPrice - totalRealPrice;
-                                    totalpriceloi = Math.Round(totalpriceloi, 0);
-                                    dathangpercent = Convert.ToDouble(staff.PercentReceive);
-                                    double income = Math.Round(totalpriceloi * dathangpercent / 100, 0);
-                                    //double income = totalpriceloi;
-                                    StaffIncomeController.Update(staff.ID, totalRealPrice.ToString(), dathangpercent.ToString(), 1,
-                                                income.ToString(), false, currentDate, username);
-                                }
+                //if (DathangID > 0)
+                //{
+                //    if (DathangID == dathangID_old)
+                //    {
+                //        var staff = StaffIncomeController.GetByMainOrderIDUID(ID, dathangID_old);
+                //        if (staff != null)
+                //        {
+                //            if (staff.Status == 1)
+                //            {
+                //                //double totalPrice = Convert.ToDouble(mo.TotalPriceVND);
+                //                double totalPrice = Convert.ToDouble(mo.PriceVND) + Convert.ToDouble(mo.FeeShipCN);
+                //                totalPrice = Math.Round(totalPrice, 0);
+                //                double totalRealPrice = 0;
+                //                if (!string.IsNullOrEmpty(mo.TotalPriceReal))
+                //                    totalRealPrice = Math.Round(Convert.ToDouble(mo.TotalPriceReal), 0);
+                //                if (totalRealPrice > 0)
+                //                {
+                //                    double totalpriceloi = totalPrice - totalRealPrice;
+                //                    totalpriceloi = Math.Round(totalpriceloi, 0);
+                //                    dathangpercent = Convert.ToDouble(staff.PercentReceive);
+                //                    double income = Math.Round(totalpriceloi * dathangpercent / 100, 0);
+                //                    //double income = totalpriceloi;
+                //                    StaffIncomeController.Update(staff.ID, totalRealPrice.ToString(), dathangpercent.ToString(), 1,
+                //                                income.ToString(), false, currentDate, username);
+                //                }
 
-                            }
-                        }
-                        else
-                        {
-                            var dathang = AccountController.GetByID(DathangID);
-                            if (dathang != null)
-                            {
-                                dathangName = dathang.Username;
-                                //double totalPrice = Convert.ToDouble(mo.TotalPriceVND);
-                                double totalPrice = Convert.ToDouble(mo.PriceVND) + Convert.ToDouble(mo.FeeShipCN);
-                                totalPrice = Math.Round(totalPrice, 0);
-                                double totalRealPrice = 0;
-                                if (!string.IsNullOrEmpty(mo.TotalPriceReal))
-                                    totalRealPrice = Math.Round(Convert.ToDouble(mo.TotalPriceReal), 0);
-                                if (totalRealPrice > 0)
-                                {
-                                    double totalpriceloi = totalPrice - totalRealPrice;
-                                    totalpriceloi = Math.Round(totalpriceloi, 0);
-                                    double income = Math.Round(totalpriceloi * dathangpercent / 100, 0);
-                                    //double income = totalpriceloi;
-                                    StaffIncomeController.Insert(ID, totalpriceloi.ToString(), dathangpercent.ToString(), DathangID, dathangName, 3, 1,
-                                        income.ToString(), false, CreatedDate, currentDate, username);
-                                }
-                                else
-                                {
-                                    StaffIncomeController.Insert(ID, "0", dathangpercent.ToString(), DathangID, dathangName, 3, 1, "0", false,
-                                    CreatedDate, currentDate, username);
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        var staff = StaffIncomeController.GetByMainOrderIDUID(ID, dathangID_old);
-                        if (staff != null)
-                        {
-                            StaffIncomeController.Delete(staff.ID);
-                        }
-                        var dathang = AccountController.GetByID(DathangID);
-                        if (dathang != null)
-                        {
-                            dathangName = dathang.Username;
-                            //double totalPrice = Convert.ToDouble(mo.TotalPriceVND);
-                            double totalPrice = Convert.ToDouble(mo.PriceVND) + Convert.ToDouble(mo.FeeShipCN);
-                            totalPrice = Math.Round(totalPrice, 0);
-                            double totalRealPrice = 0;
-                            if (!string.IsNullOrEmpty(mo.TotalPriceReal))
-                                totalRealPrice = Math.Round(Convert.ToDouble(mo.TotalPriceReal), 0);
-                            if (totalRealPrice > 0)
-                            {
-                                double totalpriceloi = totalPrice - totalRealPrice;
-                                double income = Math.Round(totalpriceloi * dathangpercent / 100, 0);
-                                //double income = totalpriceloi;
+                //            }
+                //        }
+                //        else
+                //        {
+                //            var dathang = AccountController.GetByID(DathangID);
+                //            if (dathang != null)
+                //            {
+                //                dathangName = dathang.Username;
+                //                //double totalPrice = Convert.ToDouble(mo.TotalPriceVND);
+                //                double totalPrice = Convert.ToDouble(mo.PriceVND) + Convert.ToDouble(mo.FeeShipCN);
+                //                totalPrice = Math.Round(totalPrice, 0);
+                //                double totalRealPrice = 0;
+                //                if (!string.IsNullOrEmpty(mo.TotalPriceReal))
+                //                    totalRealPrice = Math.Round(Convert.ToDouble(mo.TotalPriceReal), 0);
+                //                if (totalRealPrice > 0)
+                //                {
+                //                    double totalpriceloi = totalPrice - totalRealPrice;
+                //                    totalpriceloi = Math.Round(totalpriceloi, 0);
+                //                    double income = Math.Round(totalpriceloi * dathangpercent / 100, 0);
+                //                    //double income = totalpriceloi;
+                //                    StaffIncomeController.Insert(ID, totalpriceloi.ToString(), dathangpercent.ToString(), DathangID, dathangName, 3, 1,
+                //                        income.ToString(), false, CreatedDate, currentDate, username);
+                //                }
+                //                else
+                //                {
+                //                    StaffIncomeController.Insert(ID, "0", dathangpercent.ToString(), DathangID, dathangName, 3, 1, "0", false,
+                //                    CreatedDate, currentDate, username);
+                //                }
+                //            }
+                //        }
+                //    }
+                //    else
+                //    {
+                //        var staff = StaffIncomeController.GetByMainOrderIDUID(ID, dathangID_old);
+                //        if (staff != null)
+                //        {
+                //            StaffIncomeController.Delete(staff.ID);
+                //        }
+                //        var dathang = AccountController.GetByID(DathangID);
+                //        if (dathang != null)
+                //        {
+                //            dathangName = dathang.Username;
+                //            //double totalPrice = Convert.ToDouble(mo.TotalPriceVND);
+                //            double totalPrice = Convert.ToDouble(mo.PriceVND) + Convert.ToDouble(mo.FeeShipCN);
+                //            totalPrice = Math.Round(totalPrice, 0);
+                //            double totalRealPrice = 0;
+                //            if (!string.IsNullOrEmpty(mo.TotalPriceReal))
+                //                totalRealPrice = Math.Round(Convert.ToDouble(mo.TotalPriceReal), 0);
+                //            if (totalRealPrice > 0)
+                //            {
+                //                double totalpriceloi = totalPrice - totalRealPrice;
+                //                double income = Math.Round(totalpriceloi * dathangpercent / 100, 0);
+                //                //double income = totalpriceloi;
 
-                                StaffIncomeController.Insert(ID, totalpriceloi.ToString(), dathangpercent.ToString(), DathangID, dathangName, 3, 1,
-                                    income.ToString(), false, CreatedDate, currentDate, username);
-                            }
-                            else
-                            {
-                                StaffIncomeController.Insert(ID, "0", dathangpercent.ToString(), DathangID, dathangName, 3, 1, "0", false,
-                                CreatedDate, currentDate, username);
-                            }
-                        }
-                    }
-                }
+                //                StaffIncomeController.Insert(ID, totalpriceloi.ToString(), dathangpercent.ToString(), DathangID, dathangName, 3, 1,
+                //                    income.ToString(), false, CreatedDate, currentDate, username);
+                //            }
+                //            else
+                //            {
+                //                StaffIncomeController.Insert(ID, "0", dathangpercent.ToString(), DathangID, dathangName, 3, 1, "0", false,
+                //                CreatedDate, currentDate, username);
+                //            }
+                //        }
+                //    }
+                //}
                 #endregion
             }
 

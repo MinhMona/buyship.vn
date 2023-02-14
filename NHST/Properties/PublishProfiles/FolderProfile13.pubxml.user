@@ -5,7 +5,8 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 <Project>
   <PropertyGroup>
     <_PublishTargetUrl>C:\MonaMedia\z_Publish\NHTQ</_PublishTargetUrl>
-    <History>True|2023-02-09T08:33:00.1985284Z;</History>
+    <History>True|2023-02-13T07:57:51.9930957Z;True|2023-02-09T15:33:00.1985284+07:00;</History>
+    <LastFailureDetails />
   </PropertyGroup>
   <ItemGroup>
     <File Include="App.Master">
@@ -25326,10 +25327,10 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>10/05/2021 09:03:41</publishTime>
     </File>
     <File Include="bin/NHST.dll">
-      <publishTime>02/09/2023 15:32:28</publishTime>
+      <publishTime>02/14/2023 09:00:57</publishTime>
     </File>
     <File Include="bin/NHST.pdb">
-      <publishTime>02/09/2023 15:32:28</publishTime>
+      <publishTime>02/14/2023 09:00:57</publishTime>
     </File>
     <File Include="bin/Owin.dll">
       <publishTime>10/05/2021 09:03:43</publishTime>
@@ -25422,7 +25423,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>10/05/2021 09:02:33</publishTime>
     </File>
     <File Include="chi-tiet-don-hang.aspx">
-      <publishTime>10/05/2021 09:02:33</publishTime>
+      <publishTime>02/13/2023 14:41:40</publishTime>
     </File>
     <File Include="chi-tiet-thanh-toan-ho.aspx">
       <publishTime>10/05/2021 09:02:33</publishTime>
@@ -25464,7 +25465,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>10/05/2021 09:02:33</publishTime>
     </File>
     <File Include="dashboard.aspx">
-      <publishTime>10/05/2021 09:02:33</publishTime>
+      <publishTime>02/13/2023 14:11:42</publishTime>
     </File>
     <File Include="dat-hang-ngoai-he-thong-app.aspx">
       <publishTime>10/05/2021 09:02:33</publishTime>
@@ -25716,7 +25717,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>12/17/2021 10:35:49</publishTime>
     </File>
     <File Include="manager/OrderDetail.aspx">
-      <publishTime>02/08/2023 17:40:28</publishTime>
+      <publishTime>02/13/2023 14:52:25</publishTime>
     </File>
     <File Include="manager/OrderDetailUpdateIncome.aspx">
       <publishTime>11/25/2022 09:25:52</publishTime>
@@ -25725,7 +25726,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>10/27/2022 14:27:57</publishTime>
     </File>
     <File Include="manager/OrderList.aspx">
-      <publishTime>12/02/2022 15:26:10</publishTime>
+      <publishTime>02/13/2023 14:13:40</publishTime>
     </File>
     <File Include="manager/outstock-finish-vch.aspx">
       <publishTime>10/05/2021 09:02:33</publishTime>

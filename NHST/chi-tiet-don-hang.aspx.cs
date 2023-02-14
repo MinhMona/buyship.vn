@@ -649,7 +649,7 @@ namespace NHST
                                 ltrSmallPackages.Text += "  <td>" + Math.Round(weigthQD, 2) + "</td>";
                                 ltrSmallPackages.Text += "  <td>" + Math.Round(cantinhtien, 2) + "</td>";
                                 ltrSmallPackages.Text += "<td><span>" + s.Description + "</span></td>";
-                                ltrSmallPackages.Text += "<td>" + PJUtils.IntToStringStatusSmallPackageWithBGNew(Convert.ToInt32(s.Status)) + "</td>";
+                                ltrSmallPackages.Text += "<td>" + PJUtils.IntToStringStatusSmallPackageWithBG45(Convert.ToInt32(s.Status)) + "</td>";
                                 ltrSmallPackages.Text += "</tr>";
                             }
                         }
@@ -845,18 +845,18 @@ namespace NHST
                         ltrOverView.Text += "<div class=\"left-fixed\"><span class=\"lb\">Trạng thái đơn hàng: </span></div>";
                         if (o.OrderType == 3)
                         {
-                            //if (o.IsCheckNotiPrice == false)
-                            //{
-                            //    ltrOverView.Text += "<div class=\"right-content\"><span class=\"badge green darken-2 left m-0\">Chờ báo giá</span></div>";
-                            //}
-                            //else
-                            //{
-                            ltrOverView.Text += "<div class=\"right-content\">" + PJUtils.IntToRequestClientNew(Convert.ToInt32(o.Status)) + "</div>";
-                            //}
+                            if (o.IsCheckNotiPrice == false)
+                            {
+                                ltrOverView.Text += "<div ><span style=\"margin: 0;\" class=\"badge yellow darken-2 left m-0\">Chờ báo giá</span></div>";
+                            }
+                            else
+                            {
+                                ltrOverView.Text += "<div " + PJUtils.IntToRequestAdminNew(Convert.ToInt32(o.Status)) + "</div>";
+                            }
                         }
                         else
                         {
-                            ltrOverView.Text += "<div class=\"right-content\">" + PJUtils.IntToRequestClientNew(Convert.ToInt32(o.Status)) + "</div>";
+                            ltrOverView.Text += "<div " + PJUtils.IntToRequestAdminNew(Convert.ToInt32(o.Status)) + "</div>";
                         }
 
                         ltrOverView.Text += "</div>";

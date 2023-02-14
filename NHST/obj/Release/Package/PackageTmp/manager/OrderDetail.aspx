@@ -457,12 +457,12 @@
                                             </div>
                                             <div class="right-content">
                                                 <div class="row">
-                                                    <div class="input-field col s12 m6">
+                                                    <div class="input-field col s12 m6" style="display:none">
                                                         <asp:TextBox ID="pBuyNDT" runat="server" Enabled="false" onkeyup="CountFeeBuyPro()" placeholder="0" type="text" data-type="number" value=""></asp:TextBox>
                                                         <label>Yên (¥)</label>
                                                     </div>
                                                     <asp:Panel runat="server" ID="pnadmin">
-                                                        <div class="input-field col s12 m6">
+                                                        <div class="input-field col s12">
                                                             <asp:TextBox ID="pBuy" runat="server" placeholder="0" type="text" data-type="number" value=""></asp:TextBox>
                                                             <label>Việt Nam Đồng (VNĐ)</label>
                                                         </div>

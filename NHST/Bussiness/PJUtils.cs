@@ -1733,9 +1733,9 @@ namespace NHST.Bussiness
             else if (status == 2)
                 return "<span class=\"badge border-radius-2 darken-2 yellow white-text\">Đã về kho JP</span>";
             else if (status == 3)
-                return "<span class=\"badge border-radius-2 darken-2 green white-text\">Đã về kho đích</span>";
+                return "<span class=\"badge border-radius-2 darken-2 green white-text\">Đã về kho VN</span>";
             else if (status == 4)
-                return "<span class=\"badge border-radius-2 darken-2 orange white-text\">Đã thanh toán</span>";
+                return "<span class=\"badge border-radius-2 darken-2 orange white-text\">Đã giao cho khách</span>";
             else
                 return "<span class=\"badge border-radius-2 darken-2 blue white-text\">Đã giao cho khách</span>";
         }

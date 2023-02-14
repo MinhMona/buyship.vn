@@ -1,6 +1,12 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/UserMasterNew.Master" AutoEventWireup="true" CodeBehind="dashboard.aspx.cs" Inherits="NHST.dashboard" %>
 
-<asp:Content runat="server" ContentPlaceHolderID="head"></asp:Content>
+<asp:Content runat="server" ContentPlaceHolderID="head">
+    <style>
+        .yellow-gold.darken-2 {
+    background-color: #e87e04 !important;
+}
+    </style>
+</asp:Content>
 
 <asp:Content runat="server" ContentPlaceHolderID="ContentPlaceHolder1">
     <div id="main">

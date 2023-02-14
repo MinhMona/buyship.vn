@@ -493,14 +493,14 @@ namespace NHST
 
                         if (item.OrderType == 3)
                         {
-                            //if (item.IsCheckNotiPrice == false)
-                            //{
-                            //    html.Append("<td class=\"no-wrap\"><span class=\"badge yellow-gold darken-2 white-text border-radius-2\">Chờ báo giá</span></td>");
-                            //}
-                            //else
-                            //{
-                            html.Append("<td class=\"no-wrap\">" + PJUtils.IntToRequestAdminNew(status) + "</td>");
-                            //}
+                            if (item.IsCheckNotiPrice == false)
+                            {
+                                html.Append("<td class=\"no-wrap\"><span class=\"badge yellow darken-2 white-text border-radius-2\">Chờ báo giá</span></td>");
+                            }
+                            else
+                            {
+                                html.Append("<td class=\"no-wrap\">" + PJUtils.IntToRequestAdminNew(status) + "</td>");
+                            }
                         }
                         else
                         {

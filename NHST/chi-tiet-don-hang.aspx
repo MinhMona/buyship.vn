@@ -10,6 +10,12 @@
         .bronze.darken-2 {
             background: #e6cb78;
         }
+        .yellow-gold.darken-2 {
+            background-color: #e87e04 !important;
+        }
+        span.badge {
+            margin:0 !important;
+        }
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">

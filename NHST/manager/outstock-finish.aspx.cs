@@ -443,7 +443,7 @@ namespace NHST.manager
                                         html.Append("<td><span>" + p.packagecode + "</span></td>");
                                         html.Append("<td><span>" + p.weight + "</span></td>");
                                         //html.Append("<td><span>" + string.Format("{0:N0}", Convert.ToDouble(p.DonGia)) + "</span></td>");
-                                        html.Append("<td>" + PJUtils.IntToStringStatusSmallPackage45(p.Status) + "</td>");
+                                        html.Append("<td>" + PJUtils.IntToStringStatusSmallPackageWithBG45(p.Status) + "</td>");
                                         html.Append("<td>" + status + "</td>");
                                         html.Append("<td><span>" + p.DateInWare + "</span></td>");
                                         html.Append("<td>" + string.Format("{0:N0}", p.payInWarehouse) + " VNĐ</td>");
@@ -458,7 +458,7 @@ namespace NHST.manager
                                         html.Append("<td><span>" + p.packagecode + "</span></td>");
                                         html.Append("<td><span>" + p.weight + "</span></td>");
                                         //html.Append("<td><span>" + string.Format("{0:N0}", Convert.ToDouble(p.DonGia)) + "</span></td>");
-                                        html.Append("<td>" + PJUtils.IntToStringStatusSmallPackage45(p.Status) + "</td>");
+                                        html.Append("<td>" + PJUtils.IntToStringStatusSmallPackageWithBG45(p.Status) + "</td>");
                                         html.Append("<td>" + status + "</td>");
                                         html.Append("<td><span>" + p.DateInWare + "</span></td>");
                                         html.Append("<td>" + string.Format("{0:N0}", p.payInWarehouse) + " VNĐ</td>");

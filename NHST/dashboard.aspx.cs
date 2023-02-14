@@ -85,14 +85,14 @@ namespace NHST
                         ottml.Append("<td class=\"no-wrap\">" + string.Format("{0:dd/MM/yyyy}", item.CreatedDate) + "</td>");
                         if (item.OrderType == 3)
                         {
-                            //if (item.IsCheckNotiPrice == false)
-                            //{
-                            //    ottml.Append("<td><span class=\"badge green darken-2 white-text border-radius-2\">Chờ báo giá</span></td>");
-                            //}
-                            //else
-                            //{
-                            ottml.Append("<td>" + PJUtils.IntToRequestAdminNew(Convert.ToInt32(item.Status)) + "</td>");
-                            //}
+                            if (item.IsCheckNotiPrice == false)
+                            {
+                                ottml.Append("<td><span class=\"badge yellow darken-2 white-text border-radius-2\">Chờ báo giá</span></td>");
+                            }
+                            else
+                            {
+                                ottml.Append("<td>" + PJUtils.IntToRequestAdminNew(Convert.ToInt32(item.Status)) + "</td>");
+                            }
                         }
                         else
                         {
